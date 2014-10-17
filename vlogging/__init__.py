@@ -4,6 +4,7 @@ import StringIO
 from string import Template
 import base64
 
+__version__ = "0.1"
 renderers = []
 
 try:
