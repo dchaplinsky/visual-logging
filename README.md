@@ -8,7 +8,7 @@ visual-logging piggy backs on logging module and allows you to use sick power of
 Now you can add OpenCV images (well technically it's numpy arrays), PIL images and matplotlib graphs to your logs.
 
 ## Installation
-```pip install visuallloging```
+```pip install visuall-loging```
 
 No extra dependencies
 
