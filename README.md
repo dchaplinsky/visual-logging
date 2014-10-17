@@ -9,6 +9,7 @@ You can add OpenCV images (well technically it's numpy arrays) and PIL images to
 
 ## Installation
 ```pip install visuallloging```
+
 No extra dependencies
 
 ## Usage example (see demo.py)
