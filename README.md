@@ -7,6 +7,10 @@ visual-logging piggy backs on logging module and allows you to use sick power of
 
 You can add OpenCV images (well technically it's numpy arrays) and PIL images to your logs. Matplotlib will be added as well.
 
+## Installation
+```pip install visuallloging```
+No extra dependencies
+
 ## Usage example (see demo.py)
 ```python
 from logging import FileHandler
@@ -36,3 +40,5 @@ if __name__ == '__main__':
         VisualRecord("Hello from both", [cv_image, pil_image], fmt="jpeg"))
 
 ```
+
+You can generated html [here](http://dchaplinsky.github.io/visual-logging/)

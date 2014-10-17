@@ -2,7 +2,7 @@ from setuptools import setup
 from vlogging import __version__
 
 setup(
-    name='Visual Logging',
+    name='visuallogging',
     version=__version__,
     url='https://github.com/dchaplinsky/visual-logging',
     license='MIT',
