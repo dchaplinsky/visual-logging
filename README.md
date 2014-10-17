@@ -5,7 +5,7 @@ A simple way to generate beautiful html logs with embedded images for CV purpose
 
 visual-logging piggy backs on logging module and allows you to use sick power of logging to debug your computer vision application on a whole new level.
 
-You can add OpenCV images (well technically it's numpy arrays) and PIL images to your logs. Matplotlib will be added as well.
+Now you can add OpenCV images (well technically it's numpy arrays), PIL images and matplotlib graphs to your logs.
 
 ## Installation
 ```pip install visuallloging```
@@ -20,6 +20,14 @@ from vlogging import VisualRecord
 if __name__ == '__main__':
     import cv2
     from PIL import Image
+    import numpy as np
+    import matplotlib.pyplot as plt
+
+    # evenly sampled time at 200ms intervals
+    t = np.arange(0., 5., 0.2)
+
+    fig1 = plt.figure()
+    plt.plot(t, t, 'r--', t, t ** 2, 'bs', t, t ** 3, 'g^')
 
     cv_image = cv2.imread('lenna.jpg')
     pil_image = Image.open('lenna.jpg')
@@ -32,14 +40,18 @@ if __name__ == '__main__':
     logger.addHandler(fh)
 
     logger.debug(VisualRecord(
-        "Hello from OpenCV", cv_image, "multi\n\nline", fmt="png"))
+        "Hello from OpenCV", cv_image, "This is openCV image", fmt="png"))
 
     logger.info(VisualRecord(
-        "Hello from PIL", pil_image, "annotation", fmt="jpeg"))
+        "Hello from PIL", pil_image, "This is PIL image", fmt="jpeg"))
+
+    logger.info(VisualRecord(
+        "Hello from pylab", fig1, "This is PyLab graph", fmt="png"))
 
     logger.warning(
-        VisualRecord("Hello from both", [cv_image, pil_image], fmt="jpeg"))
+        VisualRecord("Hello from all", [cv_image, pil_image, fig1],
+                     fmt="png"))
 
 ```
 
-You can generated html [here](http://dchaplinsky.github.io/visual-logging/)
+You can check generated html [here](http://dchaplinsky.github.io/visual-logging/)

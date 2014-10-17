@@ -43,6 +43,24 @@ try:
 except ImportError:
     pass
 
+try:
+    import pylab
+
+    def render_pylab(img, fmt="png"):
+        if not callable(getattr(img, "savefig", None)):
+            return None
+
+        output = StringIO.StringIO()
+        img.savefig(output, format=fmt)
+        contents = output.getvalue()
+        output.close()
+
+        return contents, "image/%s" % fmt
+
+    renderers.append(render_pylab)
+except ImportError:
+    pass
+
 
 class VisualRecord(object):
     def __init__(self, title="", imgs=None, footnotes="", fmt="png"):
