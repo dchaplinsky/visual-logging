@@ -19,7 +19,9 @@ python:
  - "2.7"
 
 install:
- - cd /opt/X11/include/libpng15
+ - ls -lh /opt/
+ - ls -lh /opt/X11/
+ - ls -lh /opt/X11/include/
  - sudo mv png.h _png.h
  - sudo mv pngconf.h _pngconf.h
  - sudo mv pnglibconf.h _pnglibconf.h
