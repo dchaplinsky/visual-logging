@@ -8,19 +8,26 @@ cache:
     - /home/travis/virtualenv/python2.7/lib/python2.7/site-packages
 
 before_install:
- - pwd
  - sudo apt-get update
- - sudo apt-get install -qq python-numpy 
- - sudo apt-get install -qq python-matplotlib
+ - sudo apt-get install -qq zlib1g-dev
  - sudo apt-get install -qq build-essential
+ - wget http://prdownloads.sourceforge.net/libpng/libpng-1.5.12.tar.gz?download
+ - tar xzf libpng-1.5.12.tar.gz
+ - rm libpng-1.5.12.tar.gz
+ - pushd libpng-1.5.12
+ - ./configure --prefix=/usr/local/libpng
+ - make
+ - sudo make install
+ - popd
+ - sudo apt-get install -qq python-numpy 
  - curl -sL https://github.com/Itseez/opencv/archive/2.4.9.zip > opencv.zip
  - unzip opencv.zip
  - rm opencv.zip
  - mkdir opencv-build
- - cd opencv-build/
+ - pushd opencv-build/
  - cmake -DCMAKE_BUILD_TYPE=RELEASE -DBUILD_DOCS=OFF -DBUILD_EXAMPLES=OFF -DBUILD_opencv_java=OFF -DBUILD_JASPER=ON -DWITH_JASPER=ON -DBUILD_ZLIB=ON -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF -DWITH_OPENEXR=OFF -DBUILD_PNG=ON -DWITH_PNG=ON -DWITH_TIFF=ON -DBUILD_TIFF=ON -DWITH_WEBP=OFF -DWITH_JPEG=ON -DBUILD_JPEG=ON ../opencv-2.4.9/
  - sudo make install
- - cd ..
+ - popd
 
 python:
  - "2.7"
