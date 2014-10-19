@@ -11,7 +11,7 @@ before_install:
  - sudo apt-get update
  - sudo apt-get install -qq zlib1g-dev
  - sudo apt-get install -qq build-essential
- - wget http://prdownloads.sourceforge.net/libpng/libpng-1.5.12.tar.gz?download
+ - wget http://prdownloads.sourceforge.net/libpng/libpng-1.5.12.tar.gz
  - tar xzf libpng-1.5.12.tar.gz
  - rm libpng-1.5.12.tar.gz
  - pushd libpng-1.5.12
