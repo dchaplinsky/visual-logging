@@ -7,6 +7,10 @@ visual-logging piggy backs on logging module and allows you to use sick power of
 
 Now you can add OpenCV images (well technically it's numpy arrays), PIL images and matplotlib graphs to your logs.
 
+
+[![Build Status](https://travis-ci.org/dchaplinsky/visual-logging.svg?branch=master)](https://travis-ci.org/dchaplinsky/visual-logging)
+[![Coverage Status](https://coveralls.io/repos/dchaplinsky/visual-logging/badge.png)](https://coveralls.io/r/dchaplinsky/visual-logging)
+
 ## Installation
 ```pip install visual-logging```
 
