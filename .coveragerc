@@ -1,0 +1,17 @@
+[run]
+omit =
+    */python?.?/*
+    */lib-python/?.?/*.py
+    */lib_pypy/*.py
+    */site-packages/nose/*
+    */unittest2/*
+    */pyshared/*
+    */dist-packages/*
+    */tests/*
+    */venv/*
+    demo.py
+    setup.py
+
+exclude_lines =
+    # Have to re-enable the standard pragma
+    pragma: no cover

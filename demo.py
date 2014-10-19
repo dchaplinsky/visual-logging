@@ -13,8 +13,8 @@ if __name__ == '__main__':
     fig1 = plt.figure()
     plt.plot(t, t, 'r--', t, t ** 2, 'bs', t, t ** 3, 'g^')
 
-    cv_image = cv2.imread('lenna.jpg')
-    pil_image = Image.open('lenna.jpg')
+    cv_image = cv2.imread('vlogging/tests/lenna.jpg')
+    pil_image = Image.open('vlogging/tests/lenna.jpg')
 
     import logging
     logger = logging.getLogger("demo")
