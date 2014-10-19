@@ -11,7 +11,8 @@ before_install:
  - pwd
  - sudo apt-get update
  - sudo apt-get install -qq python-numpy 
- - sudo apt-get install build-essential
+ - sudo apt-get install -qq python-matplotlib
+ - sudo apt-get install -qq build-essential
  - curl -sL https://github.com/Itseez/opencv/archive/2.4.9.zip > opencv.zip
  - unzip opencv.zip
  - rm opencv.zip
@@ -25,15 +26,15 @@ python:
  - "2.7"
 
 install:
- - pushd /usr/include/libpng12
- - sudo mv png.h _png.h
- - sudo mv pngconf.h _pngconf.h
- - popd
+ # - pushd /usr/include/libpng12
+ # - sudo mv png.h _png.h
+ # - sudo mv pngconf.h _pngconf.h
+ # - popd
  - pip install -r devrequirements.txt
- - pushd /usr/include/libpng12
- - sudo mv _png.h png.h
- - sudo mv _pngconf.h pngconf.h
- - popd
+ # - pushd /usr/include/libpng12
+ # - sudo mv _png.h png.h
+ # - sudo mv _pngconf.h pngconf.h
+ # - popd
  
 # command to run tests
 script: nosetests -vs vlogging/tests/corner_cases.py vlogging/tests/basic.py --with-isolation --with-coverage --cover-erase --cover-package=.
