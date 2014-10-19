@@ -6,7 +6,6 @@ before_install:
  - sudo apt-get update
  - sudo apt-get install -qq python-numpy 
  - sudo apt-get install build-essential
- - sudo apt-get install opencv
  # - curl -sL https://github.com/Itseez/opencv/archive/2.4.9.zip > opencv.zip
  # - unzip opencv.zip
  # - rm opencv.zip
