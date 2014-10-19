@@ -22,7 +22,7 @@ install:
  # - ls -lh /opt/
  # - ls -lh /opt/X11/
  # - ls -lh /opt/X11/include/
- - cd usr/include/libpng12
+ - cd /usr/include/libpng12
  - sudo mv png.h _png.h
  - sudo mv pngconf.h _pngconf.h
  - sudo mv pnglibconf.h _pnglibconf.h
