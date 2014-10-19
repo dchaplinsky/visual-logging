@@ -22,13 +22,14 @@ install:
  # - ls -lh /opt/
  # - ls -lh /opt/X11/
  # - ls -lh /opt/X11/include/
- # - sudo mv png.h _png.h
- # - sudo mv pngconf.h _pngconf.h
- # - sudo mv pnglibconf.h _pnglibconf.h
+ - cd usr/include/libpng12
+ - sudo mv png.h _png.h
+ - sudo mv pngconf.h _pngconf.h
+ - sudo mv pnglibconf.h _pnglibconf.h
  - pip install -r devrequirements.txt --use-mirrors
- # - sudo mv _png.h png.h
- # - sudo mv _pngconf.h pngconf.h
- # - sudo mv _pnglibconf.h pnglibconf.h
+ - sudo mv _png.h png.h
+ - sudo mv _pngconf.h pngconf.h
+ - sudo mv _pnglibconf.h pnglibconf.h
 
 # command to run tests
 script: nosetests -vs vlogging/tests/corner_cases.py vlogging/tests/basic.py --with-isolation --with-coverage --cover-erase --cover-package=.
