@@ -5,15 +5,16 @@ virtualenv:
 before_install:
  - sudo apt-get update
  - sudo apt-get install -qq python-numpy 
- - sudo apt-get install build-essential
- - curl -sL https://github.com/Itseez/opencv/archive/2.4.9.zip > opencv.zip
- - unzip opencv.zip
- - rm opencv.zip
- - mkdir opencv-build
- - cd opencv-build/
- - cmake -DCMAKE_BUILD_TYPE=RELEASE -DBUILD_DOCS=OFF -DBUILD_EXAMPLES=OFF -DBUILD_opencv_java=OFF -DBUILD_JASPER=ON -DWITH_JASPER=ON -DBUILD_ZLIB=ON -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF -DWITH_OPENEXR=OFF -DBUILD_PNG=ON -DWITH_PNG=ON -DWITH_TIFF=ON -DBUILD_TIFF=ON -DWITH_WEBP=OFF -DWITH_JPEG=ON -DBUILD_JPEG=ON ../opencv-2.4.9/
- - sudo make install
- - cd ..
+ - sudo apt-get install -qq python-opencv
+ # - sudo apt-get install build-essential
+ # - curl -sL https://github.com/Itseez/opencv/archive/2.4.9.zip > opencv.zip
+ # - unzip opencv.zip
+ # - rm opencv.zip
+ # - mkdir opencv-build
+ # - cd opencv-build/
+ # - cmake -DCMAKE_BUILD_TYPE=RELEASE -DBUILD_DOCS=OFF -DBUILD_EXAMPLES=OFF -DBUILD_opencv_java=OFF -DBUILD_JASPER=ON -DWITH_JASPER=ON -DBUILD_ZLIB=ON -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF -DWITH_OPENEXR=OFF -DBUILD_PNG=ON -DWITH_PNG=ON -DWITH_TIFF=ON -DBUILD_TIFF=ON -DWITH_WEBP=OFF -DWITH_JPEG=ON -DBUILD_JPEG=ON ../opencv-2.4.9/
+ # - sudo make install
+ # - cd ..
 
 python:
  - "2.7"
@@ -22,14 +23,14 @@ install:
  # - ls -lh /opt/
  # - ls -lh /opt/X11/
  # - ls -lh /opt/X11/include/
- - cd /usr/include/libpng12
- - sudo mv png.h _png.h
- - sudo mv pngconf.h _pngconf.h
- - sudo mv pnglibconf.h _pnglibconf.h
+ # - cd /usr/include/libpng12
+ # - sudo mv png.h _png.h
+ # - sudo mv pngconf.h _pngconf.h
+ # - sudo mv pnglibconf.h _pnglibconf.h
  - pip install -r devrequirements.txt --use-mirrors
- - sudo mv _png.h png.h
- - sudo mv _pngconf.h pngconf.h
- - sudo mv _pnglibconf.h pnglibconf.h
+ # - sudo mv _png.h png.h
+ # - sudo mv _pngconf.h pngconf.h
+ # - sudo mv _pnglibconf.h pnglibconf.h
 
 # command to run tests
 script: nosetests -vs vlogging/tests/corner_cases.py vlogging/tests/basic.py --with-isolation --with-coverage --cover-erase --cover-package=.
