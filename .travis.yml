@@ -25,15 +25,15 @@ python:
  - "2.7"
 
 install:
- - cd /usr/include/libpng12
+ - pushd /usr/include/libpng12
  - sudo mv png.h _png.h
  - sudo mv pngconf.h _pngconf.h
- - cd ~/visual-logging
+ - popd
  - pip install -r devrequirements.txt
- - cd /usr/include/libpng12
+ - pushd /usr/include/libpng12
  - sudo mv _png.h png.h
  - sudo mv _pngconf.h pngconf.h
- - cd ~/visual-logging
+ - popd
  
 # command to run tests
 script: nosetests -vs vlogging/tests/corner_cases.py vlogging/tests/basic.py --with-isolation --with-coverage --cover-erase --cover-package=.
