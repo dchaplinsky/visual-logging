@@ -17,6 +17,7 @@ before_install:
  - ./configure --prefix=/usr/local
  - make
  - sudo make install
+ - ldconfig
  - popd
  - curl -sL https://github.com/Itseez/opencv/archive/2.4.9.zip > opencv.zip
  - unzip opencv.zip
@@ -32,7 +33,7 @@ python:
 
 install:
  - pip install -r devrequirements.txt
- 
+
 # command to run tests
 script: nosetests -vs vlogging/tests/corner_cases.py vlogging/tests/basic.py --with-isolation --with-coverage --cover-erase --cover-package=.
 
