@@ -9,17 +9,15 @@ cache:
 
 before_install:
  - sudo apt-get update
- - sudo apt-get install -qq zlib1g-dev
- - sudo apt-get install -qq build-essential
+ - sudo apt-get install -qq zlib1g-dev build-essential python-numpy
  - wget http://prdownloads.sourceforge.net/libpng/libpng-1.5.12.tar.gz
  - tar xzf libpng-1.5.12.tar.gz
  - rm libpng-1.5.12.tar.gz
  - pushd libpng-1.5.12
- - ./configure --prefix=/usr/local/libpng
+ - ./configure --prefix=/usr/local
  - make
  - sudo make install
  - popd
- - sudo apt-get install -qq python-numpy 
  - curl -sL https://github.com/Itseez/opencv/archive/2.4.9.zip > opencv.zip
  - unzip opencv.zip
  - rm opencv.zip
@@ -33,15 +31,7 @@ python:
  - "2.7"
 
 install:
- - pushd /usr/include/libpng12
- - sudo mv png.h _png.h
- - sudo mv pngconf.h _pngconf.h
- - popd
  - pip install -r devrequirements.txt
- - pushd /usr/include/libpng12
- - sudo mv _png.h png.h
- - sudo mv _pngconf.h pngconf.h
- - popd
  
 # command to run tests
 script: nosetests -vs vlogging/tests/corner_cases.py vlogging/tests/basic.py --with-isolation --with-coverage --cover-erase --cover-package=.
