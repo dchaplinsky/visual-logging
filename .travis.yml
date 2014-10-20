@@ -42,3 +42,4 @@ notifications:
 
 after_success:
  - coveralls
+
