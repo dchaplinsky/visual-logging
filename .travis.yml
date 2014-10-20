@@ -17,7 +17,7 @@ before_install:
  - ./configure --prefix=/usr/local
  - make
  - sudo make install
- - ldconfig
+ - sudo ldconfig
  - popd
  - curl -sL https://github.com/Itseez/opencv/archive/2.4.9.zip > opencv.zip
  - unzip opencv.zip
