@@ -30,6 +30,8 @@ before_install:
 
 python:
  - "2.7"
+ - "3.4"
+ - "3.3"
 
 install:
  - pip install -r devrequirements.txt
