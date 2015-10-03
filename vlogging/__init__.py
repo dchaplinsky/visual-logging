@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from io import StringIO
+from io import BytesIO as StringIO
 from string import Template
 import base64
 
@@ -32,7 +32,7 @@ try:
         if not callable(getattr(img, "save", None)):
             return None
 
-        output = StringIO.StringIO()
+        output = StringIO()
         img.save(output, format=fmt)
         contents = output.getvalue()
         output.close()
@@ -50,7 +50,7 @@ try:
         if not callable(getattr(img, "savefig", None)):
             return None
 
-        output = StringIO.StringIO()
+        output = StringIO()
         img.savefig(output, format=fmt)
         contents = output.getvalue()
         output.close()
