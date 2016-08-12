@@ -93,7 +93,7 @@ class VisualRecord(object):
 
         return "".join(
             Template('<img src="data:$mime;base64,$data" />').substitute({
-                "data": base64.b64encode(data),
+                "data": base64.b64encode(data).decode(),
                 "mime": mime
             }) for data, mime in rendered)
 
