@@ -4,7 +4,7 @@ from io import BytesIO as StringIO
 from string import Template
 import base64
 
-__version__ = "0.2"
+__version__ = "1.0"
 renderers = []
 
 try:
