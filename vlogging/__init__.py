@@ -3,9 +3,11 @@
 from io import BytesIO as StringIO
 from string import Template
 import base64
+import sys
 
 __version__ = "1.0"
 renderers = []
+__is_python_3__ = (sys.version_info[0] >= 3) 
 
 try:
     import cv2
@@ -77,6 +79,12 @@ class VisualRecord(object):
 
         self.footnotes = footnotes
 
+    def getEncodedString(self, data):
+        ret = str(base64.b64encode(data))
+        if __is_python_3__:
+            ret = ret[2:-1]
+        return ret
+
     def render_images(self):
         rendered = []
 
@@ -93,7 +101,7 @@ class VisualRecord(object):
 
         return "".join(
             Template('<img src="data:$mime;base64,$data" />').substitute({
-                "data": base64.b64encode(data).decode(),
+                "data": self.getEncodedString(data),
                 "mime": mime
             }) for data, mime in rendered)
 

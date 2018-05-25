@@ -6,6 +6,7 @@ cache:
   apt: true
   directories:
     - /home/travis/virtualenv/python2.7/lib/python2.7/site-packages
+    - /home/travis/virtualenv/python3.2/lib/python3.2/site-packages
 
 before_install:
  - sudo apt-get update
@@ -30,8 +31,8 @@ before_install:
 
 python:
  - "2.7"
- # - "3.4"
- # - "3.3"
+ - "3.2"
+#  - "3.3"
 
 install:
  - pip install -r devrequirements.txt
