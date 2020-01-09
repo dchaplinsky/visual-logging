@@ -24,14 +24,14 @@ if __name__ == '__main__':
     logger.addHandler(fh)
 
     logger.debug(VisualRecord(
-        "Hello from OpenCV", cv_image, "This is openCV image", fmt="png"))
+        "Hello from OpenCV", cv_image, "This is openCV image", fmt="png", size=(50, 50)))
 
     logger.info(VisualRecord(
-        "Hello from PIL", pil_image, "This is PIL image", fmt="jpeg"))
+        "Hello from PIL", pil_image, "This is PIL image", fmt="jpeg", size=(100, 300)))
 
     logger.info(VisualRecord(
-        "Hello from pylab", fig1, "This is PyLab graph", fmt="png"))
+        "Hello from pylab", fig1, "This is PyLab graph", fmt="png", size=(100, 300)))
 
     logger.warning(
         VisualRecord("Hello from all", [cv_image, pil_image, fig1],
-                     fmt="png"))
+                     fmt="png", size=(50, 50)))

@@ -11,10 +11,12 @@ try:
     import cv2
     import numpy
 
-    def render_opencv(img, fmt="png"):
+    def render_opencv(img, fmt="png", size=None):
         if not isinstance(img, numpy.ndarray):
             return None
 
+        if size and isinstance(size, tuple):
+            img = cv2.resize(img, size)
         retval, buf = cv2.imencode(".%s" % fmt, img)
         if not retval:
             return None
@@ -28,11 +30,13 @@ except ImportError:
 try:
     from PIL import Image
 
-    def render_pil(img, fmt="png"):
+    def render_pil(img, fmt="png", size=None):
         if not callable(getattr(img, "save", None)):
             return None
 
         output = StringIO()
+        if size and isinstance(size, tuple):
+            img = img.resize(size)
         img.save(output, format=fmt)
         contents = output.getvalue()
         output.close()
@@ -46,11 +50,15 @@ except ImportError:
 try:
     import pylab
 
-    def render_pylab(img, fmt="png"):
+    def render_pylab(img, fmt="png", size=None):
         if not callable(getattr(img, "savefig", None)):
             return None
 
         output = StringIO()
+        if size and isinstance(size, tuple):
+            size = (size[0]/img.dpi, size[1]/img.dpi)
+            img.set_size_inches(size)
+
         img.savefig(output, format=fmt)
         contents = output.getvalue()
         output.close()
@@ -63,9 +71,10 @@ except ImportError:
 
 
 class VisualRecord(object):
-    def __init__(self, title="", imgs=None, footnotes="", fmt="png"):
+    def __init__(self, title="", imgs=None, footnotes="", fmt="png", size=None):
         self.title = title
         self.fmt = fmt
+        self.size = size
 
         if imgs is None:
             imgs = []
@@ -83,7 +92,7 @@ class VisualRecord(object):
         for img in self.imgs:
             for renderer in renderers:
                 # Trying renderers we have one by one
-                res = renderer(img, self.fmt)
+                res = renderer(img, self.fmt, self.size)
 
                 if res is None:
                     continue
