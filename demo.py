@@ -10,7 +10,7 @@ if __name__ == "__main__":
     import numpy as np
     from PIL import Image
 
-    lenna = str(Path(__file__).parent / "tests" / "lenna.jpg")
+    lenna = str(Path(__file__).parent / "vlogging" / "tests" / "lenna.jpg")
 
     # evenly sampled time at 200ms intervals
     t = np.arange(0., 5., 0.2)
