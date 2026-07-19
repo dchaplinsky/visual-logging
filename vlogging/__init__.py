@@ -7,6 +7,15 @@ __version__ = "2.0"
 
 renderers = []
 
+
+def _fit_scale(width, height, max_size):
+    """Shrink-only scale factor that fits width x height into max_size."""
+    if max_size is None:
+        return 1
+
+    return min(max_size[0] / width, max_size[1] / height, 1)
+
+
 try:
     import cv2
     import numpy
@@ -15,12 +24,10 @@ try:
         if not isinstance(img, numpy.ndarray):
             return None
 
-        if max_size is not None:
-            scale = min(max_size[0] / img.shape[1],
-                        max_size[1] / img.shape[0])
-            if scale < 1:
-                img = cv2.resize(img, None, fx=scale, fy=scale,
-                                 interpolation=cv2.INTER_AREA)
+        scale = _fit_scale(img.shape[1], img.shape[0], max_size)
+        if scale < 1:
+            img = cv2.resize(img, None, fx=scale, fy=scale,
+                             interpolation=cv2.INTER_AREA)
 
         retval, buf = cv2.imencode(f".{fmt}", img)
         if not retval:
@@ -39,10 +46,10 @@ try:
         if not isinstance(img, Image.Image):
             return None
 
-        if max_size is not None and \
-                (img.width > max_size[0] or img.height > max_size[1]):
-            img = img.copy()
-            img.thumbnail(max_size)
+        scale = _fit_scale(img.width, img.height, max_size)
+        if scale < 1:
+            img = img.resize((max(1, round(img.width * scale)),
+                              max(1, round(img.height * scale))))
 
         output = BytesIO()
         img.save(output, format=fmt)
@@ -82,8 +89,9 @@ class VisualRecord:
 
     ``imgs`` accepts a single image or a list of OpenCV arrays, PIL images
     and matplotlib figures, in any combination. ``max_size`` is an optional
-    ``(width, height)`` bound: raster images larger than that are downscaled
-    (preserving aspect ratio) before being embedded, to keep log files small.
+    ``(width, height)`` bound: OpenCV and PIL images larger than that are
+    downscaled (preserving aspect ratio) before being embedded, to keep log
+    files small; matplotlib figures are embedded as rendered.
     """
 
     def __init__(self, title="", imgs=None, footnotes="", fmt="png",

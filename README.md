@@ -55,7 +55,7 @@ Open `test.html` in a browser and enjoy. A sample of generated html is available
 | `imgs` | A single image or a list of images: OpenCV/numpy arrays, PIL images and matplotlib figures in any combination |
 | `footnotes` | Optional text rendered as `<pre>` under the images |
 | `fmt` | Image format to embed: `png` (default), `jpeg`, `webp` — anything your imaging library can encode |
-| `max_size` | Optional `(width, height)` tuple: raster images bigger than that are downscaled proportionally before embedding, to keep log files readable and small |
+| `max_size` | Optional `(width, height)` tuple: OpenCV and PIL images bigger than that are downscaled proportionally before embedding, to keep log files readable and small (matplotlib figures are embedded as rendered) |
 
 ## Changelog
 
