@@ -18,7 +18,7 @@ class BasicTestCase(unittest.TestCase):
         self.assertTrue("<pre>" in s)
 
     def test_all_renderers(self):
-        self.assertEqual(len(vlogging.renderers), 3)
+        self.assertEqual(len(vlogging.renderers), 4)
 
     def test_invalid_images(self):
         s = str(vlogging.VisualRecord(
@@ -71,6 +71,33 @@ class BasicTestCase(unittest.TestCase):
 
         self.assertTrue("image/jpeg" in s)
         self.assertEqual(s.count("<img"), 2)
+
+    def test_lazy_images(self):
+        from PIL import Image
+
+        s = str(vlogging.VisualRecord(imgs=Image.open(LENNA)))
+        self.assertTrue('loading="lazy"' in s)
+
+    def test_repr_html(self):
+        from PIL import Image
+
+        s = vlogging.VisualRecord(
+            title="title", imgs=Image.open(LENNA))._repr_html_()
+        self.assertTrue("title" in s)
+        self.assertEqual(s.count("<img"), 1)
+        self.assertEqual(s.count("<hr/>"), 0)
+
+    def test_numpy(self):
+        import numpy as np
+
+        arr = np.zeros((8, 8, 3), dtype=np.uint8)
+        data, mime = vlogging.render_numpy(arr)
+        self.assertEqual(mime, "image/png")
+        self.assertTrue(data)
+
+        self.assertIsNone(vlogging.render_numpy("foobar"))
+        self.assertIsNone(
+            vlogging.render_numpy(np.zeros((4, 4), dtype=np.complex128)))
 
     def test_pil_max_size(self):
         from io import BytesIO
@@ -134,6 +161,23 @@ class BasicTestCase(unittest.TestCase):
         restored = cv2.imdecode(
             numpy.frombuffer(bytes(same), numpy.uint8), cv2.IMREAD_COLOR)
         self.assertEqual(restored.shape, cv_image.shape)
+
+    def test_matplotlib_max_size(self):
+        from io import BytesIO
+
+        import matplotlib.pyplot as plt
+        from PIL import Image
+
+        fig = plt.figure(figsize=(6.4, 4.8), dpi=100)
+
+        data, _ = vlogging.render_matplotlib(fig, max_size=(64, 48))
+        restored = Image.open(BytesIO(data))
+        self.assertTrue(max(restored.size) <= 64)
+
+        # Figure already fits: rendered at its own dpi
+        data, _ = vlogging.render_matplotlib(fig, max_size=(10000, 10000))
+        restored = Image.open(BytesIO(data))
+        self.assertEqual(restored.size, (640, 480))
 
     def test_matplotlib_basic(self):
         import matplotlib.pyplot as plt

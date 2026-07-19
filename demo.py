@@ -1,8 +1,7 @@
 import logging
-from logging import FileHandler
 from pathlib import Path
 
-from vlogging import VisualRecord
+from vlogging import HTMLFileHandler, VisualRecord
 
 if __name__ == "__main__":
     import cv2
@@ -22,10 +21,8 @@ if __name__ == "__main__":
     pil_image = Image.open(lenna)
 
     logger = logging.getLogger("demo")
-    fh = FileHandler("test.html", mode="w")
-
     logger.setLevel(logging.DEBUG)
-    logger.addHandler(fh)
+    logger.addHandler(HTMLFileHandler("test.html", title="visual-logging demo"))
 
     logger.debug(VisualRecord(
         "Hello from OpenCV", cv_image, "This is OpenCV image", fmt="png"))
@@ -44,5 +41,13 @@ if __name__ == "__main__":
         VisualRecord("Hello from all (downscaled to fit 200x200)",
                      [cv_image, pil_image, fig1],
                      fmt="png", max_size=(200, 200)))
+
+    logger.info("Plain text records work too, and are escaped: <html> & so on")
+
+    try:
+        1 / 0
+    except ZeroDivisionError:
+        logger.exception(VisualRecord(
+            "Exceptions come with tracebacks", cv_image))
 
     logging.shutdown()

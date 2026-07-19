@@ -42,5 +42,8 @@ test = [
 [tool.setuptools]
 packages = ["vlogging"]
 
+[tool.setuptools.package-data]
+vlogging = ["py.typed"]
+
 [tool.setuptools.dynamic]
 version = {attr = "vlogging.__version__"}

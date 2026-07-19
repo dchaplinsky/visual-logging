@@ -16,20 +16,19 @@ You can read about it in detail in a great blog post [visual-logging, my new fav
 pip install visual-logging
 ```
 
-No extra dependencies — whichever of OpenCV, PIL/Pillow and matplotlib you already have installed are picked up automatically. Requires Python 3.9+.
+No extra dependencies — whichever of OpenCV, PIL/Pillow and matplotlib you already have installed are picked up automatically (numpy arrays render through PIL when OpenCV isn't around). Requires Python 3.9+.
 
 ## Usage example (see demo.py)
 
 ```python
 import logging
-from logging import FileHandler
-from vlogging import VisualRecord
+from vlogging import HTMLFileHandler, VisualRecord
 
 import cv2  # or PIL.Image, or matplotlib — whatever you use
 
 logger = logging.getLogger("demo")
 logger.setLevel(logging.DEBUG)
-logger.addHandler(FileHandler("test.html", mode="w"))
+logger.addHandler(HTMLFileHandler("test.html", title="My debug log"))
 
 cv_image = cv2.imread("lenna.jpg")
 
@@ -42,10 +41,21 @@ logger.warning(VisualRecord(
     "Hello from all", [cv_image, pil_image, mpl_figure],
     fmt="png", max_size=(320, 240)))
 
+# Ordinary log calls work too, and land in the same page:
+logger.info("Processed frame %d", 42)
+
 logging.shutdown()  # flushes and closes the html file
 ```
 
-Open `test.html` in a browser and enjoy. A sample of generated html is available [here](http://dchaplinsky.github.io/visual-logging/).
+Open `test.html` in a browser and enjoy: `HTMLFileHandler` writes a styled, self-contained page — records are color-coded by log level with timestamps and logger names, plain messages are escaped, and exceptions logged with `logger.exception(...)` include their traceback. Records are flushed as they happen, so you can watch the page mid-run.
+
+Everything composes the stdlib way: `HTMLFileHandler` is a `logging.FileHandler` that installs a `VisualFormatter` (a `logging.Formatter`) by default — use either piece on its own if you prefer. Passing a `VisualRecord` to a plain `FileHandler` still produces bare html fragments, exactly as in 1.x.
+
+In **Jupyter**, a `VisualRecord` displays itself inline — no logging setup needed:
+
+```python
+VisualRecord("Detected edges", edges_img, "Canny output")
+```
 
 ### `VisualRecord` arguments
 
@@ -55,12 +65,16 @@ Open `test.html` in a browser and enjoy. A sample of generated html is available
 | `imgs` | A single image or a list of images: OpenCV/numpy arrays, PIL images and matplotlib figures in any combination |
 | `footnotes` | Optional text rendered as `<pre>` under the images |
 | `fmt` | Image format to embed: `png` (default), `jpeg`, `webp` — anything your imaging library can encode |
-| `max_size` | Optional `(width, height)` tuple: OpenCV and PIL images bigger than that are downscaled proportionally before embedding, to keep log files readable and small (matplotlib figures are embedded as rendered) |
+| `max_size` | Optional `(width, height)` tuple: images bigger than that are downscaled proportionally before embedding (matplotlib figures by lowering the render dpi), to keep log files readable and small |
 
 ## Changelog
 
 **2.0**
-- Modern packaging (`pyproject.toml`), Python 3.9+ only
-- New `max_size` option to downscale embedded images
+- Modern packaging (`pyproject.toml`), Python 3.9+ only, `py.typed` type hints
+- New `HTMLFileHandler` + `VisualFormatter`: styled, self-contained html pages with level colors, timestamps, escaped plain-text records and tracebacks
+- New `max_size` option to downscale embedded images (all renderers)
+- `VisualRecord` displays inline in Jupyter notebooks
+- numpy arrays render via PIL when OpenCV is not installed
+- Embedded images use `loading="lazy"`, so huge logs open fast
 - matplotlib support no longer relies on the deprecated `pylab` module
-- Tests run on GitHub Actions against Python 3.9–3.13
+- Tests run on GitHub Actions against Python 3.9–3.13; releases publish to PyPI from tags via trusted publishing
