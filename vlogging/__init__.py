@@ -206,8 +206,35 @@ class VisualFormatter(logging.Formatter):
     ``VisualRecord`` messages get their images embedded; any other message
     is escaped and rendered as text, so ordinary log calls mix in safely.
     Meant for handlers that write to an html page, e.g. ``HTMLFileHandler``
-    (which installs it by default).
+    (which installs it by default and embeds ``STYLE``, the CSS for the
+    cards, into the page it writes).
     """
+
+    STYLE = """.record {
+    border: 1px solid #8884; border-left: .25rem solid var(--accent, #888);
+    border-radius: .25rem; padding: .5rem .75rem; margin: .75rem 0;
+}
+.record.debug { --accent: #9e9e9e; }
+.record.info { --accent: #2196f3; }
+.record.warning { --accent: #ff9800; }
+.record.error { --accent: #f44336; }
+.record.critical { --accent: #b71c1c; }
+.record > header {
+    display: flex; gap: .75rem; align-items: baseline;
+    font-size: .8rem; margin-bottom: .25rem;
+}
+.record .level { color: var(--accent); font-weight: 700; }
+.record .logger { opacity: .7; }
+.record time {
+    margin-left: auto; opacity: .7; font-variant-numeric: tabular-nums;
+}
+.record h4 { margin: .25rem 0; }
+.record img { max-width: 100%; height: auto; margin: .25rem .25rem 0 0; }
+.record pre {
+    overflow-x: auto; background: #8881;
+    padding: .5rem; border-radius: .25rem;
+}
+"""
 
     def format(self, record: logging.LogRecord) -> str:
         if isinstance(record.msg, VisualRecord):
@@ -215,16 +242,25 @@ class VisualFormatter(logging.Formatter):
         else:
             body = f"<pre>{html.escape(record.getMessage())}</pre>"
 
-        if record.exc_info:
-            body += ('\n<pre class="traceback">%s</pre>' %
-                     html.escape(self.formatException(record.exc_info)))
+        for text in (
+            record.exc_info and self.formatException(record.exc_info),
+            record.stack_info and self.formatStack(record.stack_info),
+        ):
+            if text:
+                body += f'\n<pre class="traceback">{html.escape(text)}</pre>'
 
-        if record.stack_info:
-            body += ('\n<pre class="traceback">%s</pre>' %
-                     html.escape(self.formatStack(record.stack_info)))
-
-        levelclass = "".join(
-            c for c in record.levelname.lower() if c.isalnum())
+        # Bucket by severity rather than name, so custom levels registered
+        # with logging.addLevelName still get the nearest standard color
+        if record.levelno >= logging.CRITICAL:
+            levelclass = "critical"
+        elif record.levelno >= logging.ERROR:
+            levelclass = "error"
+        elif record.levelno >= logging.WARNING:
+            levelclass = "warning"
+        elif record.levelno >= logging.INFO:
+            levelclass = "info"
+        else:
+            levelclass = "debug"
 
         return (
             '<article class="record %s">\n'
@@ -245,39 +281,14 @@ _PAGE_HEADER = """<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>%s</title>
+<title>%(title)s</title>
 <style>
 :root { color-scheme: light dark; }
 body {
     margin: 0 auto; padding: 1rem; max-width: 60rem;
     font-family: system-ui, sans-serif;
 }
-.record {
-    border: 1px solid #8884; border-left: .25rem solid var(--accent, #888);
-    border-radius: .25rem; padding: .5rem .75rem; margin: .75rem 0;
-}
-.record.debug { --accent: #9e9e9e; }
-.record.info { --accent: #2196f3; }
-.record.warning { --accent: #ff9800; }
-.record.error { --accent: #f44336; }
-.record.critical { --accent: #b71c1c; }
-.record > header {
-    display: flex; gap: .75rem; align-items: baseline;
-    font-size: .8rem; margin-bottom: .25rem;
-}
-.record .level { color: var(--accent); font-weight: 700; }
-.record .logger { opacity: .7; }
-.record time {
-    margin-left: auto; opacity: .7; font-variant-numeric: tabular-nums;
-}
-.record h4 { margin: .25rem 0; }
-.record img { max-width: 100%%; height: auto; margin: .25rem .25rem 0 0; }
-.record pre {
-    overflow-x: auto; background: #8881;
-    padding: .5rem; border-radius: .25rem;
-}
-.record hr { display: none; }
-</style>
+%(style)s</style>
 </head>
 <body>
 <main>
@@ -309,7 +320,13 @@ class HTMLFileHandler(logging.FileHandler):
     def _open(self):
         stream = super()._open()
         if stream.tell() == 0:
-            stream.write(_PAGE_HEADER % html.escape(self.title))
+            # The formatter is not set yet when the stream opens eagerly
+            # during __init__; the default formatter's style applies then
+            style = getattr(getattr(self, "formatter", None), "STYLE", None)
+            stream.write(_PAGE_HEADER % {
+                "title": html.escape(self.title),
+                "style": style or VisualFormatter.STYLE,
+            })
 
         return stream
 
