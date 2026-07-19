@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "visual-logging"
+dynamic = ["version"]
+description = "A simple way to generate beautiful html logs with embedded images for CV purposes."
+readme = "README.md"
+license = "MIT"
+authors = [
+    {name = "Dmitry Chaplinsky", email = "chaplinsky.dmitry@gmail.com"},
+]
+requires-python = ">=3.9"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Image Processing",
+    "Topic :: System :: Logging",
+]
+
+[project.urls]
+Homepage = "https://github.com/dchaplinsky/visual-logging"
+Issues = "https://github.com/dchaplinsky/visual-logging/issues"
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "numpy",
+    "opencv-python-headless",
+    "Pillow",
+    "matplotlib",
+]
+
+[tool.setuptools]
+packages = ["vlogging"]
+
+[tool.setuptools.package-data]
+vlogging = ["py.typed"]
+
+[tool.setuptools.dynamic]
+version = {attr = "vlogging.__version__"}
